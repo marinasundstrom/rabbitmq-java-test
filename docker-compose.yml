@@ -1,0 +1,29 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: 'rabbitmq'
+    hostname: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SomeRandomStringHere
+    networks:
+      - rabbitmq_go_net
+
+  client:
+    image: t-client
+    depends_on: ["rabbitmq"]
+    networks:
+      - rabbitmq_go_net
+
+  server:
+    image: t-server
+    depends_on: ["rabbitmq"]
+    networks:
+      - rabbitmq_go_net
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge
